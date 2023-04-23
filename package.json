@@ -1,28 +1,26 @@
 {
-  "name": "nodejs-hw",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "hwJS",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "start:dev" : "nodemon index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DmytroRudenko11/nodeJS-hw.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DmytroRudenko11/nodeJS-hw/issues"
-  },
-  "homepage": "https://github.com/DmytroRudenko11/nodeJS-hw#readme",
-  "devDependencies": {
-    "nodemon": "^2.0.22"
+    "start": "cross-env NODE_ENV=production node ./server.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "lint": "eslint **/*.js",
+    "lint:fix": "eslint --fix **/*.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "2.8.5",
+    "cross-env": "7.0.3",
+    "express": "4.17.1",
+    "morgan": "1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "7.19.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "5.2.0",
+    "nodemon": "2.0.15"
   }
 }
