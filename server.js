@@ -1,5 +1,18 @@
 const app = require("./app");
 
-app.listen(3001, () => {
-  console.log("Server running. Use our API on port: 3001");
-});
+const mongoose = require("mongoose");
+
+const DB_HOST =
+  "mongodb+srv://Dmytro:P19U7pjmwjxJm4Z9@cluster0.cqls2b5.mongodb.net/ContactList?retryWrites=true&w=majority";
+
+mongoose
+  .connect(DB_HOST)
+  .then(() =>
+    app.listen(3001, () => {
+      console.log("Server is running port: 3001");
+    })
+  )
+  .catch((error) => {
+    console.log(error.message);
+    process.exit(1);
+  });
