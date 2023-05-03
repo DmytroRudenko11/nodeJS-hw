@@ -1,13 +1,9 @@
 # GoIT Node.js Homework
 
-=======================
-
 This is an API for managing of contact list.
 Application written using node.js, express, mongodb, mognoose.
 
 ## Methods and endpoints
-
-========================
 
 Below there is despcrition and demostation of using appropriate methods and endpoints
 
