@@ -4,7 +4,8 @@ const { HttpError } = require("../helpers");
 const { controllerDecorator } = require("../utils/controller-decorator");
 
 const getContacts = async (req, res) => {
-  const listContacts = await Contact.find();
+  const { _id: owner } = req.user;
+  const listContacts = await Contact.find({ owner }, "-updatedAt");
   res.json(listContacts);
 };
 
@@ -19,7 +20,8 @@ const getContactsById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const newContact = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const newContact = await Contact.create({ ...req.body, owner });
   res.status(201).json(newContact);
 };
 
