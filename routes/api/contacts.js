@@ -9,20 +9,21 @@ const schemas = require("../../schemas/contactsSchemas");
 
 const contactsControlles = require("../../contollers/contacts-controllers.js");
 
-router.get("/", authenticate, contactsControlles.getContacts);
+router.use(authenticate);
 
-router.get("/:id", authenticate, isValidId, contactsControlles.getContactsById);
+router.get("/", contactsControlles.getContacts);
+
+router.get("/:id", isValidId, contactsControlles.getContactsById);
 
 router.post(
   "/",
-  authenticate,
+
   validateBody(schemas.addSchema),
   contactsControlles.addContact
 );
 
 router.put(
   "/:id",
-  authenticate,
   isValidId,
   validateBody(schemas.addSchema),
   contactsControlles.updateContact
@@ -31,16 +32,10 @@ router.put(
 router.patch(
   "/:id/favorite",
   isValidId,
-  authenticate,
   validateBody(schemas.updateFavoriteSchema),
   contactsControlles.updateFavorite
 );
 
-router.delete(
-  "/:id",
-  authenticate,
-  isValidId,
-  contactsControlles.deleteContact
-);
+router.delete("/:id", isValidId, contactsControlles.deleteContact);
 
 module.exports = router;

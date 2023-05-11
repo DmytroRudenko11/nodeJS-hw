@@ -11,6 +11,7 @@ const signUpSchema = Joi.object({
     "any.required": `"Email" is a required field`,
     "string.email": "Email must be a valid email",
   }),
+  subscription: Joi.string().valid("starter", "pro", "business"),
   password: Joi.string().min(6).required().messages({
     "any.required": `password is required`,
     "string.length": "password length must be at least 6 characters long",

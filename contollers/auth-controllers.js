@@ -16,8 +16,9 @@ const signUp = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({ ...req.body, password: hashPassword });
   res.status(201).json({
-    email: newUser.email,
     name: newUser.name,
+    email: newUser.email,
+    subscription: newUser.subscription,
   });
 };
 
@@ -37,12 +38,33 @@ const signIn = async (req, res) => {
     id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(user._id, { token });
   res.json({
     token,
+    user: {
+      name: user.name,
+      email: user.email,
+      subscription: user.subscription,
+    },
+  });
+};
+
+const getCurrent = async (req, res) => {
+  const { name, email } = req.user;
+  res.json({ name, email });
+};
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: "" });
+  res.json({
+    message: "Logout success",
   });
 };
 
 module.exports = {
   signUp: controllerDecorator(signUp),
   signIn: controllerDecorator(signIn),
+  getCurrent: controllerDecorator(getCurrent),
+  logout: controllerDecorator(logout),
 };
