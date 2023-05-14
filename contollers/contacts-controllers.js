@@ -1,4 +1,5 @@
 const Contact = require("../models/contact");
+const User = require("../models/user");
 
 const { HttpError } = require("../helpers");
 const { controllerDecorator } = require("../utils/controller-decorator");
@@ -27,6 +28,7 @@ const getContactsById = async (req, res) => {
 const addContact = async (req, res) => {
   const { _id: owner } = req.user;
   const newContact = await Contact.create({ ...req.body, owner });
+  await User.findByIdAndUpdate(owner, { $push: { contacts: newContact._id } });
   res.status(201).json(newContact);
 };
 

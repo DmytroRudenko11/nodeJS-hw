@@ -29,6 +29,7 @@ const userSchema = new Schema(
       },
       default: "starter",
     },
+    contacts: [],
     token: {
       type: String,
       default: "",
