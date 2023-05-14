@@ -16,7 +16,6 @@ const getContacts = async (req, res) => {
 };
 
 const getContactsById = async (req, res) => {
-  console.log(req.params.id);
   const { id } = req.params;
   const contact = await Contact.findById(id);
   if (!contact) {
