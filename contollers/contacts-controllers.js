@@ -6,13 +6,23 @@ const { controllerDecorator } = require("../utils/controller-decorator");
 
 const getContacts = async (req, res) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
+
+  const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
-  const listContacts = await Contact.find({ owner }, "-updatedAt", {
-    skip,
-    limit,
-  });
-  res.json(listContacts);
+  let listContacts = [];
+  if (favorite) {
+    listContacts = await Contact.find({ owner, favorite }, "-updatedAt", {
+      skip,
+      limit,
+    });
+  } else {
+    listContacts = await Contact.find({ owner }, "-updatedAt", {
+      skip,
+      limit,
+    });
+  }
+
+  await res.json(listContacts);
 };
 
 const getContactsById = async (req, res) => {

@@ -29,7 +29,17 @@ const signInSchema = Joi.object({
   }),
 });
 
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .required()
+    .messages({
+      "any.required": `Choose your subscription package: starter, pro or business`,
+    }),
+});
+
 module.exports = {
   signUpSchema,
   signInSchema,
+  updateSubscriptionSchema,
 };

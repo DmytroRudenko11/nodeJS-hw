@@ -92,10 +92,19 @@ const updateAvatar = async (req, res) => {
   });
 };
 
+const updateSubscription = async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, req.body);
+
+  res.json({
+    message: `Congrats, subscription succesfully updated. Your subscription package is "${req.body.subscription}"`,
+  });
+};
+
 module.exports = {
   signUp: controllerDecorator(signUp),
   signIn: controllerDecorator(signIn),
   getCurrent: controllerDecorator(getCurrent),
   logout: controllerDecorator(logout),
   updateAvatar: controllerDecorator(updateAvatar),
+  updateSubscription: controllerDecorator(updateSubscription),
 };

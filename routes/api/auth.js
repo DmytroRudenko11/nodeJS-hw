@@ -29,4 +29,11 @@ router.patch(
   userController.updateAvatar
 );
 
+router.patch(
+  "/user",
+  authenticate,
+  validateBody(schemas.updateSubscriptionSchema),
+  userController.updateSubscription
+);
+
 module.exports = router;
