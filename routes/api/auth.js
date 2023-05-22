@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { validateBody, authenticate } = require("../../middlewares");
+const { validateBody, authenticate, upload } = require("../../middlewares");
 const schemas = require("../../schemas/usersSchemas");
 const userController = require("../../contollers/auth-controllers");
 
@@ -21,5 +21,19 @@ router.post(
 router.get("/current", authenticate, userController.getCurrent);
 
 router.post("/logout", authenticate, userController.logout);
+
+router.patch(
+  "/avatar",
+  authenticate,
+  upload.single("avatar"),
+  userController.updateAvatar
+);
+
+router.patch(
+  "/user",
+  authenticate,
+  validateBody(schemas.updateSubscriptionSchema),
+  userController.updateSubscription
+);
 
 module.exports = router;

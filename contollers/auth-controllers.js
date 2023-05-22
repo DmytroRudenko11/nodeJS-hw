@@ -1,5 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+const jimp = require("jimp");
+const path = require("path");
+const fs = require("fs/promises");
 
 const User = require("../models/user");
 const { HttpError } = require("../helpers");
@@ -14,11 +18,18 @@ const signUp = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const avatarURL = gravatar.url(email).resize(250, 250, jimp.RESIZE_BEZIER);
+
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
   res.status(201).json({
     name: newUser.name,
     email: newUser.email,
     subscription: newUser.subscription,
+    avatar: avatarURL,
   });
 };
 
@@ -39,12 +50,14 @@ const signIn = async (req, res) => {
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
+
   res.json({
     token,
     user: {
       name: user.name,
       email: user.email,
       subscription: user.subscription,
+      avatar: user.avatarURL,
     },
   });
 };
@@ -62,9 +75,36 @@ const logout = async (req, res) => {
   });
 };
 
+const avatarDir = path.resolve("public", "avatars");
+
+const updateAvatar = async (req, res) => {
+  const { path: tempUpload, filename } = req.file;
+  const img = await jimp.read(tempUpload);
+  await img.resize(250, 250, jimp.RESIZE_BEZIER);
+  await img.writeAsync(tempUpload);
+  const resultUpload = path.join(avatarDir, filename);
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", filename);
+  await User.findByIdAndUpdate(req.user._id, { avatarURL });
+
+  res.json({
+    avatarURL,
+  });
+};
+
+const updateSubscription = async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, req.body);
+
+  res.json({
+    message: `Congrats, subscription succesfully updated. Your subscription package is "${req.body.subscription}"`,
+  });
+};
+
 module.exports = {
   signUp: controllerDecorator(signUp),
   signIn: controllerDecorator(signIn),
   getCurrent: controllerDecorator(getCurrent),
   logout: controllerDecorator(logout),
+  updateAvatar: controllerDecorator(updateAvatar),
+  updateSubscription: controllerDecorator(updateSubscription),
 };
