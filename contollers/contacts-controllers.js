@@ -8,19 +8,16 @@ const getContacts = async (req, res) => {
   const { _id: owner } = req.user;
 
   const { page = 1, limit = 20, favorite } = req.query;
-  const skip = (page - 1) * limit;
-  let listContacts = [];
-  if (favorite) {
-    listContacts = await Contact.find({ owner, favorite }, "-updatedAt", {
-      skip,
-      limit,
-    });
-  } else {
-    listContacts = await Contact.find({ owner }, "-updatedAt", {
-      skip,
-      limit,
-    });
+  const query = { owner };
+  if (favorite !== undefined) {
+    query.favorite = favorite;
   }
+  const skip = (page - 1) * limit;
+
+  const listContacts = await Contact.find(query, "-updatedAt", {
+    skip,
+    limit,
+  });
 
   await res.json(listContacts);
 };

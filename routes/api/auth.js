@@ -18,6 +18,14 @@ router.post(
   userController.signIn
 );
 
+router.get("/verify/:verificationCode", userController.verify);
+
+router.post(
+  "/verify",
+  validateBody(schemas.userEmailSchema),
+  userController.resendVerifyEmail
+);
+
 router.get("/current", authenticate, userController.getCurrent);
 
 router.post("/logout", authenticate, userController.logout);
