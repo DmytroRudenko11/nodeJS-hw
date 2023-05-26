@@ -38,8 +38,15 @@ const updateSubscriptionSchema = Joi.object({
     }),
 });
 
+const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(validRegex).required().messages({
+    "string.email": "Email must be a valid email",
+  }),
+});
+
 module.exports = {
   signUpSchema,
   signInSchema,
   updateSubscriptionSchema,
+  userEmailSchema,
 };
